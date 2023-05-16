@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SignUp Form</title>
+    <!-- <link rel="stylesheet"  href="./style.css" /> -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            font-family: "lato", sans-serif;
+        }
+
+        .signupFrm {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+
+        .form {
+            background-color: white;
+            width: 400px;
+            border-radius: 8px;
+            padding: 20px 40px;
+            box-shadow: 0 10px 25px rgba(92, 99, 105, .2);
+        }
+
+        .title {
+            font-size: 50px;
+            margin-bottom: 50px;
+        }
+
+        .inputContainer {
+            position: relative;
+            height: 45px;
+            width: 90%;
+            margin-bottom: 17px;
+        }
+
+        .input {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            height: 100%;
+            width: 100%;
+            border: 1px solid #959797;
+            border-radius: 7px;
+            font-size: 16px;
+            padding: 0 20px;
+            outline: none;
+            background: none;
+            z-index: 1;
+        }
+
+
+        .label {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 0 4px;
+            background-color: white;
+            color: #DADCE0;
+            font-size: 16px;
+            transition: 0.5s;
+            z-index: 0;
+        }
+
+        ::placeholder {
+            color: transparent;
+        }
+
+        .submitBtn {
+            display: block;
+            margin-left: auto;
+            padding: 15px 30px;
+            border: none;
+            background-color: #1a1aff;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 30px;
+        }
+
+        .submitBtn:hover {
+            background-color: #8d8dcd;
+            transform: translateY(-2px);
+        }
+
+        .input:focus+.label {
+            top: -7px;
+            left: 3px;
+            z-index: 10;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1aff;
+        }
+
+        .input:not(:placeholder-shown)+.label {
+            top: -7px;
+            left: 3px;
+            z-index: 10;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .input:focus {
+            border: 2px solid #1a1aff;
+        }
+
+        .signupBtn {
+            display: block;
+            margin-left: 5px;
+            padding: 15px 30px;
+            border: none;
+            background-color: #1a1aff;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 30px;
+        }
+
+        .signupBtn:hover {
+            background-color: #8f8fd7;
+            transform: translateY(-2px);
+        }
+
+        .not {
+            font-family: "lato", sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1aff;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signupFrm">
+        <div class="wrapper">
+            <form action="" class="form">
+                <h1 class="title">Sign in</h1>
+                <p id="data"></p>
+                <div class="inputContainer">
+                    <input type="text" class="input" placeholder="a" id="email">
+                    <label for="" class="label">Email</label>
+                </div>
+
+
+                <div class="inputContainer">
+                    <input type="password" class="input" placeholder="a" id="password">
+                    <label for="" class="label">Password</label>
+                </div>
+
+                <div style="display:flex">
+                    <input type="button" class="signupBtn" value="Sign up">
+                    <input type="button" class="submitBtn" value="Login" onclick="save()">
+                </div>
+                <p class="not">If not registered please Sign up</p>
+                
+            </form>
+        </div>
+    </div>
+    <script>
+        const emailvalue = document.getElementById('email');
+        const passwordvalue = document.getElementById('password');
+
+        function save() {
+            console.log("function called");
+            const email = emailvalue.value;
+            const password = passwordvalue.value;
+            console.log(email, password);
+            check(email, password);
+        };
+
+        async function check(email, password) {
+            const data = { email: email, password: password };
+            console.log(data);
+
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            };
+
+            let response;
+            try {
+                response = await fetch("http://localhost:3000/api/login", options);
+                const json = await response.json();
+                console.log("json", json);
+                console.log("json.accessToken", json.accessToken);
+                localStorage.setItem("accessToken", json.accessToken);
+                localStorage.setItem("refreshToken", json.refreshToken);
+
+
+                if (json.accessToken || json.refreshToken) {
+                    // redirect to the user's saved locations page
+                    window.location.href = `http://localhost:3000/api/get/${json.useridval}`;
+                }
+            } catch (error) {
+                console.log("error", error);
+            }
+        }
+
+        const signInBtn = document.querySelector('.signupBtn');
+
+        
+        signInBtn.addEventListener('click', () => {
+            // Redirect the user to the sign-in page
+            window.location.href = 'http://localhost:3000/api/sign-up';
+        });
+
+
+
+    </script>
+</body>
+
+</html>

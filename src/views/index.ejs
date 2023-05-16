@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- leaflet css  -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.74.0/dist/L.Control.Locate.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.74.0/dist/L.Control.Locate.min.js"
+        charset="utf-8"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+    <style>
+        @import url(//fonts.googleapis.com/css?family=Lato:300:400);
+
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            min-height: 100vh;
+        }
+
+        /* .xcontainer {
+            display: flex;
+            flex-direction: column;
+            /* align-items: center; */
+
+
+
+
+        /* .header>h1 {
+            font-size: 3rem;
+            font-family: "Lato", sans-serif;
+        } */
+
+        #map {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 70vh;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(92, 99, 105, .2);
+        }
+
+        .name-container {
+            display: flex;
+            align-items: center;
+            /* justify-content: center; */
+            margin-left: 660px;
+            column-gap: 2rem;
+
+            margin-top: 2rem;
+        }
+
+        #toggle {
+            display: none;
+        }
+
+        /* #main-container {
+            background-color: rgb(225, 229, 236);
+        }
+
+        #sidebar {
+            /* font-family: 'Fira Sans', sans-serif; */
+        /* font-family: 'Mulish', sans-serif;
+            color: #191a1b;
+            font-weight: 600;
+            background-color: #aab7cf;
+            box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
+        }  */
+    </style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Sans&family=Mulish:wght@300&display=swap');
+    </style>
+
+    <style>
+        /* Full-width input fields */
+        input[type=text] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        /* Set a style for all buttons */
+        .btn {
+            background-color: #012970;
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        .main-btn {
+            font-family: 'Lato', sans-serif;
+            padding: 0.5rem 0.8rem;
+            background-color: #012970;
+            border: none;
+            border-radius: 1rem;
+            color: whitesmoke;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+
+
+        }
+
+        .savebtn {
+            padding: 10px 18px;
+            background-color: #012970;
+            width: 100%;
+        }
+
+        .close-btn {
+            background-color: transparent;
+            color: #818181;
+            font-size: 2rem;
+        }
+
+        .close-btn:hover {
+            color: #000000;
+        }
+
+        /* Extra styles for the cancel button */
+        .cancelbtn {
+            padding: 10px 18px;
+            background-color: #012970;
+            width: 100%;
+        }
+
+        /* Center the image and position the close button */
+        .imgcontainer {
+            text-align: center;
+            margin: 24px 0 12px 0;
+            position: relative;
+        }
+
+        img.avatar {
+            width: 20%;
+            border-radius: 50%;
+        }
+
+        .container {
+            padding: 16px;
+        }
+
+        span.psw {
+            float: right;
+            padding-top: 16px;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+            padding-top: 60px;
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto 15% auto;
+            /* 5% from the top, 15% from the bottom and centered */
+            border: 1px solid #888;
+            width: 40%;
+            /* Could be more or less, depending on screen size */
+        }
+
+        /* The Close Button (x) */
+        .close {
+            position: absolute;
+            right: 25px;
+            top: 0;
+            color: #000;
+            font-size: 35px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #1a1aff;
+            cursor: pointer;
+        }
+
+        /* Add Zoom Animation */
+        .animate {
+            -webkit-animation: animatezoom 0.6s;
+            animation: animatezoom 0.6s
+        }
+
+        @-webkit-keyframes animatezoom {
+            from {
+                -webkit-transform: scale(0)
+            }
+
+            to {
+                -webkit-transform: scale(1)
+            }
+        }
+
+        @keyframes animatezoom {
+            from {
+                transform: scale(0)
+            }
+
+            to {
+                transform: scale(1)
+            }
+        }
+
+        /* Change styles for span and cancel button on extra small screens */
+        @media screen and (max-width: 300px) {
+            span.psw {
+                display: block;
+                float: none;
+            }
+
+            .cancelbtn {
+                width: 100%;
+            }
+        }
+    </style>
+    <!-- <style>
+        .logout-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 10px;
+        }
+
+        .logout-button a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: #fff;
+            /* background-color: #f00; */
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .logout-button a i {
+            margin-right: 5px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style> -->
+    <style>
+        /*--------------------------------------------------------------
+# General
+--------------------------------------------------------------*/
+        :root {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Open Sans", sans-serif;
+            background: #f4f5f7;
+            color: #444444;
+        }
+
+        a {
+            color: #12184e;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #717ff5;
+            text-decoration: none;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: "Nunito", sans-serif;
+        }
+
+        /*--------------------------------------------------------------
+# Main
+--------------------------------------------------------------*/
+        #main {
+            margin-top: 60px;
+            padding: 20px 30px;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        @media (max-width: 1199px) {
+            #main {
+                padding: 20px;
+            }
+        }
+
+        /*--------------------------------------------------------------
+# Page Title
+--------------------------------------------------------------*/
+        .pagetitle {
+            margin-bottom: 10px;
+        }
+
+        .pagetitle h1 {
+            font-size: 24px;
+            margin-bottom: 0;
+            font-weight: 600;
+            color: #012970;
+        }
+
+        /*--------------------------------------------------------------
+# Back to top button
+--------------------------------------------------------------*/
+        .back-to-top {
+            position: fixed;
+            visibility: hidden;
+            opacity: 0;
+            right: 15px;
+            bottom: 15px;
+            z-index: 99999;
+            background: #4154f1;
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            transition: all 0.4s;
+        }
+
+        .back-to-top i {
+            font-size: 24px;
+            color: #fff;
+            line-height: 0;
+        }
+
+        .back-to-top:hover {
+            background: #6776f4;
+            color: #fff;
+        }
+
+        .back-to-top.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /*--------------------------------------------------------------
+# Override some default Bootstrap stylings
+--------------------------------------------------------------*/
+        /* Dropdown menus */
+        .dropdown-menu {
+            border-radius: 4px;
+            padding: 10px 0;
+            animation-name: dropdown-animate;
+            animation-duration: 0.2s;
+            animation-fill-mode: both;
+            border: 0;
+            box-shadow: 0 5px 30px 0 rgba(82, 63, 105, 0.2);
+        }
+
+        .dropdown-menu .dropdown-header,
+        .dropdown-menu .dropdown-footer {
+            text-align: center;
+            font-size: 15px;
+            padding: 10px 25px;
+        }
+
+        .dropdown-menu .dropdown-footer a {
+            color: #444444;
+            text-decoration: underline;
+        }
+
+        .dropdown-menu .dropdown-footer a:hover {
+            text-decoration: none;
+        }
+
+        .dropdown-menu .dropdown-divider {
+            color: #a5c5fe;
+            margin: 0;
+        }
+
+        .dropdown-menu .dropdown-item {
+            font-size: 14px;
+            padding: 10px 15px;
+            transition: 0.3s;
+        }
+
+        .dropdown-menu .dropdown-item i {
+            margin-right: 10px;
+            font-size: 18px;
+            line-height: 0;
+        }
+
+        .dropdown-menu .dropdown-item:hover {
+            background-color: #f6f9ff;
+        }
+
+        @media (min-width: 768px) {
+            .dropdown-menu-arrow::before {
+                content: "";
+                width: 13px;
+                height: 13px;
+                background: #fff;
+                position: absolute;
+                top: -7px;
+                right: 20px;
+                transform: rotate(45deg);
+                border-top: 1px solid #eaedf1;
+                border-left: 1px solid #eaedf1;
+            }
+        }
+
+        @keyframes dropdown-animate {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+
+            0% {
+                opacity: 0;
+            }
+        }
+
+        /* Light Backgrounds */
+        .bg-primary-light {
+            background-color: #cfe2ff;
+            border-color: #cfe2ff;
+        }
+
+        .bg-secondary-light {
+            background-color: #e2e3e5;
+            border-color: #e2e3e5;
+        }
+
+        .bg-success-light {
+            background-color: #d1e7dd;
+            border-color: #d1e7dd;
+        }
+
+        .bg-danger-light {
+            background-color: #f8d7da;
+            border-color: #f8d7da;
+        }
+
+        .bg-warning-light {
+            background-color: #fff3cd;
+            border-color: #fff3cd;
+        }
+
+        .bg-info-light {
+            background-color: #cff4fc;
+            border-color: #cff4fc;
+        }
+
+        .bg-dark-light {
+            background-color: #d3d3d4;
+            border-color: #d3d3d4;
+        }
+
+        /* Card */
+        .card {
+            margin-bottom: 30px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+        }
+
+        .card-header,
+        .card-footer {
+            border-color: #ebeef4;
+            background-color: #fff;
+            color: #798eb3;
+            padding: 15px;
+        }
+
+        .card-title {
+            padding: 20px 0 15px 0;
+            font-size: 18px;
+            font-weight: 500;
+            color: #012970;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .card-title span {
+            color: #899bbd;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .card-body {
+            padding: 0 20px 20px 20px;
+        }
+
+        .card-img-overlay {
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Alerts */
+        .alert-heading {
+            font-weight: 500;
+            font-family: "Poppins", sans-serif;
+            font-size: 20px;
+        }
+
+        /* Close Button */
+        .btn-close {
+            background-size: 25%;
+        }
+
+        .btn-close:focus {
+            outline: 0;
+            box-shadow: none;
+        }
+
+        /* Accordion */
+        .accordion-item {
+            border: 1px solid #ebeef4;
+        }
+
+        .accordion-button:focus {
+            outline: 0;
+            box-shadow: none;
+        }
+
+        .accordion-button:not(.collapsed) {
+            color: #012970;
+            background-color: #f6f9ff;
+        }
+
+        .accordion-flush .accordion-button {
+            padding: 15px 0;
+            background: none;
+            border: 0;
+        }
+
+        .accordion-flush .accordion-button:not(.collapsed) {
+            box-shadow: none;
+            color: #4154f1;
+        }
+
+        .accordion-flush .accordion-body {
+            padding: 0 0 15px 0;
+            color: #3e4f6f;
+            font-size: 15px;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumb {
+            font-size: 14px;
+            font-family: "Nunito", sans-serif;
+            color: #899bbd;
+            font-weight: 600;
+        }
+
+        .breadcrumb a {
+            color: #899bbd;
+            transition: 0.3s;
+        }
+
+        .breadcrumb a:hover {
+            color: #51678f;
+        }
+
+        .breadcrumb .breadcrumb-item::before {
+            color: #899bbd;
+        }
+
+        .breadcrumb .active {
+            color: #51678f;
+            font-weight: 600;
+        }
+
+        /* Bordered Tabs */
+        .nav-tabs-bordered {
+            border-bottom: 2px solid #ebeef4;
+        }
+
+        .nav-tabs-bordered .nav-link {
+            margin-bottom: -2px;
+            border: none;
+            color: #2c384e;
+        }
+
+        .nav-tabs-bordered .nav-link:hover,
+        .nav-tabs-bordered .nav-link:focus {
+            color: #4154f1;
+        }
+
+        .nav-tabs-bordered .nav-link.active {
+            background-color: #fff;
+            color: #4154f1;
+            border-bottom: 2px solid #4154f1;
+        }
+
+        /*--------------------------------------------------------------
+# Header
+--------------------------------------------------------------*/
+        .logo {
+            line-height: 1;
+        }
+
+        @media (min-width: 1200px) {
+            .logo {
+                width: 280px;
+            }
+        }
+
+        .logo img {
+            max-height: 26px;
+            margin-right: 6px;
+        }
+
+        .logo span {
+            font-size: 26px;
+            font-weight: 700;
+            color: #012970;
+            font-family: "Nunito", sans-serif;
+        }
+
+        .header {
+            transition: all 0.5s;
+            z-index: 997;
+            height: 60px;
+            box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
+            background-color: #fff;
+            padding-left: 20px;
+            /* Toggle Sidebar Button */
+            /* Search Bar */
+        }
+
+        .header .toggle-sidebar-btn {
+            font-size: 32px;
+            padding-left: 10px;
+            cursor: pointer;
+            color: #012970;
+        }
+
+        .header .search-bar {
+            min-width: 360px;
+            padding: 0 20px;
+        }
+
+        @media (max-width: 1199px) {
+            .header .search-bar {
+                position: fixed;
+                top: 50px;
+                left: 0;
+                right: 0;
+                padding: 20px;
+                box-shadow: 0px 0px 15px 0px rgba(1, 41, 112, 0.1);
+                background: white;
+                z-index: 9999;
+                transition: 0.3s;
+                visibility: hidden;
+                opacity: 0;
+            }
+
+            .header .search-bar-show {
+                top: 60px;
+                visibility: visible;
+                opacity: 1;
+            }
+        }
+
+        .header .search-form {
+            width: 100%;
+        }
+
+        .header .search-form input {
+            border: 0;
+            font-size: 14px;
+            color: #012970;
+            border: 1px solid rgba(1, 41, 112, 0.2);
+            padding: 7px 38px 7px 8px;
+            border-radius: 3px;
+            transition: 0.3s;
+            width: 100%;
+        }
+
+        .header .search-form input:focus,
+        .header .search-form input:hover {
+            outline: none;
+            box-shadow: 0 0 10px 0 rgba(1, 41, 112, 0.15);
+            border: 1px solid rgba(1, 41, 112, 0.3);
+        }
+
+        .header .search-form button {
+            border: 0;
+            padding: 0;
+            margin-left: -30px;
+            background: none;
+        }
+
+        .header .search-form button i {
+            color: #012970;
+        }
+
+        /*--------------------------------------------------------------
+# Header Nav
+--------------------------------------------------------------*/
+        .header-nav ul {
+            list-style: none;
+        }
+
+        .header-nav>ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        .header-nav .nav-icon {
+            font-size: 22px;
+            color: #012970;
+            margin-right: 25px;
+            position: relative;
+        }
+
+        .header-nav .nav-profile {
+            color: #012970;
+        }
+
+        .header-nav .nav-profile img {
+            max-height: 36px;
+        }
+
+        .header-nav .nav-profile span {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .header-nav .badge-number {
+            position: absolute;
+            inset: -2px -5px auto auto;
+            font-weight: normal;
+            font-size: 12px;
+            padding: 3px 6px;
+        }
+
+        .header-nav .notifications {
+            inset: 8px -15px auto auto !important;
+        }
+
+        .header-nav .notifications .notification-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 10px;
+            transition: 0.3s;
+        }
+
+        .header-nav .notifications .notification-item i {
+            margin: 0 20px 0 10px;
+            font-size: 24px;
+        }
+
+        .header-nav .notifications .notification-item h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .header-nav .notifications .notification-item p {
+            font-size: 13px;
+            margin-bottom: 3px;
+            color: #919191;
+        }
+
+        .header-nav .notifications .notification-item:hover {
+            background-color: #f6f9ff;
+        }
+
+        .header-nav .messages {
+            inset: 8px -15px auto auto !important;
+        }
+
+        .header-nav .messages .message-item {
+            padding: 15px 10px;
+            transition: 0.3s;
+        }
+
+        .header-nav .messages .message-item a {
+            display: flex;
+        }
+
+        .header-nav .messages .message-item img {
+            margin: 0 20px 0 10px;
+            max-height: 40px;
+        }
+
+        .header-nav .messages .message-item h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #444444;
+        }
+
+        .header-nav .messages .message-item p {
+            font-size: 13px;
+            margin-bottom: 3px;
+            color: #919191;
+        }
+
+        .header-nav .messages .message-item:hover {
+            background-color: #f6f9ff;
+        }
+
+        .header-nav .profile {
+            min-width: 240px;
+            padding-bottom: 0;
+            top: 8px !important;
+        }
+
+        .header-nav .profile .dropdown-header h6 {
+            font-size: 18px;
+            margin-bottom: 0;
+            font-weight: 600;
+            color: #444444;
+        }
+
+        .header-nav .profile .dropdown-header span {
+            font-size: 14px;
+        }
+
+        .header-nav .profile .dropdown-item {
+            font-size: 14px;
+            padding: 10px 15px;
+            transition: 0.3s;
+        }
+
+        .header-nav .profile .dropdown-item i {
+            margin-right: 10px;
+            font-size: 18px;
+            line-height: 0;
+        }
+
+        .header-nav .profile .dropdown-item:hover {
+            background-color: #f6f9ff;
+        }
+
+        /*--------------------------------------------------------------
+# Sidebar
+--------------------------------------------------------------*/
+        .sidebar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            bottom: 0;
+            width: 300px;
+            z-index: 996;
+            transition: all 0.3s;
+            padding: 20px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #aab7cf transparent;
+            box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
+            background-color: #fff;
+        }
+
+        @media (max-width: 1199px) {
+            .sidebar {
+                left: -300px;
+            }
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 5px;
+            height: 8px;
+            background-color: #fff;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: #aab7cf;
+        }
+
+        @media (min-width: 1200px) {
+
+            #main,
+            #footer {
+                margin-left: 300px;
+            }
+        }
+
+        @media (max-width: 1199px) {
+            .toggle-sidebar .sidebar {
+                left: 0;
+            }
+        }
+
+        @media (min-width: 1200px) {
+
+            .toggle-sidebar #main,
+            .toggle-sidebar #footer {
+                margin-left: 0;
+            }
+
+            .toggle-sidebar .sidebar {
+                left: -300px;
+            }
+        }
+
+        .sidebar-nav {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .sidebar-nav .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-nav .nav-heading {
+            font-size: 20px;
+            text-transform: uppercase;
+            color: #899bbd;
+            font-weight: 600;
+            margin: 10px 0 5px 15px;
+        }
+
+        .sidebar-nav .nav-link {
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+            font-weight: 600;
+            color: #4154f1;
+            transition: 0.3;
+            background: #f6f9ff;
+            padding: 10px 15px;
+            border-radius: 4px;
+        }
+
+        .sidebar-nav .nav-link i {
+            font-size: 16px;
+            margin-right: 10px;
+            color: #4154f1;
+        }
+
+        .sidebar-nav .nav-link.collapsed {
+            color: #012970;
+            background: #fff;
+        }
+
+        .sidebar-nav .nav-link.collapsed i {
+            color: #59729f;
+        }
+
+        .sidebar-nav .nav-link:hover {
+            color: #4154f1;
+            background: #f6f9ff;
+        }
+
+        /* .sidebar-nav .nav-link:hover i {} */
+
+        .sidebar-nav .nav-link .bi-chevron-down {
+            margin-right: 0;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .sidebar-nav .nav-link:not(.collapsed) .bi-chevron-down {
+            transform: rotate(180deg);
+        }
+
+        .sidebar-nav .nav-content {
+            padding: 5px 0 0 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .sidebar-nav .nav-content a {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #012970;
+            transition: 0.3;
+            padding: 10px 0 10px 40px;
+            transition: 0.3s;
+        }
+
+        .sidebar-nav .nav-content a i {
+            font-size: 6px;
+            margin-right: 8px;
+            line-height: 0;
+            border-radius: 50%;
+        }
+
+        .sidebar-nav .nav-content a:hover,
+        .sidebar-nav .nav-content a.active {
+            color: #4154f1;
+        }
+
+        .sidebar-nav .nav-content a.active i {
+            background-color: #4154f1;
+        }
+
+        /*--------------------------------------------------------------
+# Dashboard
+--------------------------------------------------------------*/
+        /* Filter dropdown */
+        .dashboard .filter {
+            position: absolute;
+            right: 0px;
+            top: 15px;
+        }
+
+        .dashboard .filter .icon {
+            color: #aab7cf;
+            padding-right: 20px;
+            padding-bottom: 5px;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+
+        .dashboard .filter .icon:hover,
+        .dashboard .filter .icon:focus {
+            color: #4154f1;
+        }
+
+        .dashboard .filter .dropdown-header {
+            padding: 8px 15px;
+        }
+
+        .dashboard .filter .dropdown-header h6 {
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #aab7cf;
+            margin-bottom: 0;
+            padding: 0;
+        }
+
+        .dashboard .filter .dropdown-item {
+            padding: 8px 15px;
+        }
+
+        .dashboard .sales-card .card-icon {
+            color: #4154f1;
+            background: #f6f6fe;
+            justify-content: center;
+        }
+
+        .rounded-circle {
+            border-radius: 50% !important;
+        }
+
+        .bi-list-check::before {
+            content: "\f473";
+        }
+
+        .bi-list-nested::before {
+            content: "\f474";
+        }
+
+        .bi-list-ol::before {
+            content: "\f475";
+        }
+
+        .bi-list-stars::before {
+            content: "\f476";
+        }
+
+        .bi-list-task::before {
+            content: "\f477";
+        }
+
+        .bi-list-ul::before {
+            content: "\f478";
+        }
+
+        .bi-list::before {
+            content: "\f479";
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+
+
+
+
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+
+<body>
+    <header id="header" class="header fixed-top d-flex align-items-center">
+
+        <div class="d-flex align-items-center justify-content-between">
+            <a class="logo d-flex align-items-center">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkME51ceunJt_DxAIzmatbkAj2JXJEPx8X2A&usqp=CAU"
+                    alt="Profile" class="rounded-circle">
+                <span class="d-none d-lg-block">Mark My Land</span>
+                <!-- <i class="fa-solid fa-bars"></i> -->
+
+            </a>
+            <!-- <i class="bi bi-list toggle-sidebar-btn"></i> -->
+            <i style="font-size:24px" class="fa" onclick="toggleSidebar()">&#xf0c9;</i>
+
+        </div>
+
+
+        <nav class="header-nav ms-auto">
+            <ul class="d-flex align-items-center">
+
+                <li class="nav-item dropdown pe-3">
+
+                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+
+                        <i style='font-size:24px' class='far'>&#xf2bd;</i>
+                        <% if(username_val) {%>
+                            <span class="d-none d-md-block ps-2">
+                                <%= username_val%>
+                            </span>
+                            <% } %>
+                    </a>
+                <li>
+                    <a href="#" onclick="logout()" class="nav-link nav-profile d-flex align-items-center pe-0"><i
+                            class="fa fa-sign-out"></i><span>Logout</span></a>
+                </li>
+
+                </li>
+
+            </ul>
+        </nav>
+
+    </header>
+
+
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+            <li class="nav-heading">Saved Locations</li>
+            <% if(data.length){ for(var i=0; i< data.length; i++) {%>
+
+                <li class="nav-item" data-id="<%= data[i]._id %>">
+                    <a class="nav-link collapsed" style="height: 57px;"
+                        onclick="viewloc('<%= data[i].lat %>','<%= data[i].long%>','<%= data[i].name%>'); hideButton();">
+                        <div class="col">
+                            <i class='fas'>&#xf124;</i> <span>
+                                <%= data[i].name%>
+                            </span>
+
+                        </div>
+                        <div class="col d-flex justify-content-end">
+                            <!-- <i style="font-size:24px;margin-top:20px " class="fa"
+                                onclick="copyLink('https://maps.google.com/?q=<%= data[i].lat %>,<%= data[i].long %>')">&#xf0c5;</i> -->
+                            <button class="btn close-btn">&times;</button>
+
+                        </div>
+                    </a>
+                    <% } }else{ %>
+
+                        <a colspan="3">No data</a>
+
+                        <% } %>
+                </li>
+
+        </ul>
+
+    </aside>
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1 id="heading-main-page">Your Current Location</h1>
+        </div>
+        <section class="section dashboard">
+
+
+
+            <div class="col-lg-30 col-lg-30">
+                <div class="row">
+
+
+                    <div class="col-xxl-60 col-md-60">
+                        <div class="card info-card sales-card">
+
+                            <div id="map"></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <button class="btn main-btn" id="main_button"
+            onclick="document.getElementById('id01').style.display='block'">Save Current
+            Location</button>
+        <button class="btn main-btn" id="show_current" onclick="showCurrentLocation()">Show Current
+            Location</button>
+        <button onclick="location.reload()" id="refresh" class="btn main-btn" style="margin-left: 100px;"><i class="fa fa-refresh fa-spin" style="font-size:24px"></i></button>
+            
+
+    </main>
+
+
+
+    <div class="name-container">
+
+        <div id="id01" class="modal">
+            <span onclick="document.getElementById('id01').style.display='none'" class="close"
+                title="Close Modal">&times;</span>
+
+            <!-- Modal Content -->
+            <form class="modal-content animate">
+                <div class="imgcontainer">
+                    <span onclick="document.getElementById('id01').style.display='none'" class="close"
+                        title="Close Modal">&times;</span>
+                    <img src="https://cdn-icons-png.flaticon.com/512/1865/1865269.png" alt="Avatar" class="avatar">
+                </div>
+
+                <div class="container">
+                    <label for="name"><b>Name</b></label>
+                    <input type="text" placeholder="Enter name" name="name" id="name">
+
+                    <button type="button" class="btn savebtn">Save</button>
+                </div>
+
+                <div class="container" style="background-color:#f1f1f1">
+                    <button type="button" onclick="document.getElementById('id01').style.display='none'"
+                        class="btn cancelbtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+
+
+
+    </div>
+    <!-- </div> -->
+
+
+    <script>
+        function copyLink(link) {
+            var dummy = document.createElement("input");
+            document.body.appendChild(dummy);
+            dummy.setAttribute("id", "dummy_id");
+            document.getElementById("dummy_id").value = link;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+            alert("Copied the link: " + link);
+        }
+    </script>
+    <!-- leaflet js  -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.js"
+        charset="utf-8"></script>
+
+    <script>
+        // Map initialization 
+        var menuName = '';
+        var map = L.map('map', { doubleClickZoom: false }).locate({ setView: true, maxZoom: 19 });
+        map.on('locationfound', function (e) {
+            var marker = L.marker(e.latlng).addTo(map);
+            latitude = e.latitude;
+            longitude = e.longitude;
+
+            console.log('Lat: ', e.latitude, 'Long: ', e.longitude)
+
+        });
+
+
+
+        const mapLink =
+            '<a href="http://www.esri.com/">Esri</a>';
+        wholink =
+            'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+        L.tileLayer(
+            'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '&copy; ' + mapLink + ', ' + wholink,
+            maxZoom: 19,
+        }).addTo(map);
+
+
+        L.control.locate().addTo(map);
+        document.getElementById("show_current").style.display = "none";
+
+        //function to view selected location on map
+        function viewloc(l1, l2, name) {
+            var lat = l1;
+            var lng = l2;
+            var zoom = 19;
+            menuName = name
+            var marker = L.marker([lat, lng], {}).addTo(map);
+            // set the view
+            map.setView([lat, lng], zoom);
+            var x = document.getElementById("main_button");
+            x.style.display = "none";
+            document.getElementById("show_current").style.display = "block";
+            document.getElementById('heading-main-page').innerHTML = "Currently Showing: " + menuName;
+
+        }
+        function hideButton() {
+            var button = document.getElementById("refresh");
+            button.classList.add("hidden");
+        }
+
+        
+        let latitude;
+        let longitude;
+
+        function showCurrentLocation() {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var latlng = L.latLng(position.coords.latitude, position.coords.longitude);
+                var marker = L.marker(latlng).addTo(map);
+                map.setView(latlng, 19);
+            });
+            document.getElementById("show_current").style.display = "none";
+            var x = document.getElementById("main_button");
+            x.style.display = "block";
+            document.getElementById('heading-main-page').innerHTML = "Your Current Location";
+
+        }
+
+
+
+        // const toggle1 = document.getElementById('show').addEventListener('click', () => {
+        //     var x = document.getElementById("toggle");
+        //     x.style.display = "block";
+        //     var y = document.getElementById("show");
+        //     y.style.display = "none";
+
+        // });
+
+
+        var currentURL = (document.URL); // returns http://myplace.com/abcd
+        console.log('currentURL: ', currentURL);
+        var part = currentURL.split("/");
+        var result = part[part.length - 1];
+        console.log('result: ', result);
+
+        var modal = document.getElementById('id01');
+
+
+        const nameInput = document.getElementById('name');
+
+
+        const saveButton = document.querySelector('.savebtn').addEventListener('click', () => {
+
+            const locname = nameInput.value;
+            saveInfo(locname, result);
+
+            // saveInfo(locname);
+            document.getElementById("name").value = "";
+            modal.style.display = "none";
+            console.log("at last")
+        });
+
+
+        async function saveInfo(name, result) {
+            const data = { name, lat: latitude, long: longitude, user: result };
+            //const data = {name, lat: latitude, long: longitude,user:"palak"}
+            console.log('data', data);
+
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            };
+            console.log('options', options);
+
+            const response = await fetch("http://localhost:3000/api/post", options);
+            console.log(response);
+            console.log("after saveInfo")
+
+        }
+
+        // Get the modal
+
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        const buttons = document.querySelectorAll('.close-btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.parentElement.dataset.id;
+                console.log('id', id);
+
+                fetch('http://localhost:3000/api/delete/' + id, {
+                    method: 'DELETE'
+                }).then(response => {
+                    window.location.reload(); // Reload the page after deletion
+                });
+            });
+        });
+
+        //logout
+        function logout() {
+            fetch("http://localhost:3000/api/logout", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    token: localStorage.getItem("refreshToken")
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        localStorage.removeItem("accessToken")
+                        localStorage.removeItem("refreshToken")
+                        // window.location.href = "/home/imentus/Desktop/palak/build/src/views/signin.ejs"
+                        window.location.href = 'http://localhost:3000/api/sign-in';
+
+                    }
+                })
+        }
+
+        //toggle side bar
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("hide");
+        }
+
+        function showButton() {
+            var button = document.getElementById("refresh");
+            button.classList.remove("hidden");
+        }
+    </script>
+
+
+    </script>
+
+
+</body>
+
+</html>
